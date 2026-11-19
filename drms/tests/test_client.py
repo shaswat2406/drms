@@ -29,3 +29,11 @@ def test_client_custom_config():
 def test_repr():
     assert repr(drms.Client()) == "<Client: JSOC>"
     assert repr(drms.Client("kis")) == "<Client: KIS>"
+
+
+def test_export_request_status_no_requestid():
+    mock_client = MagicMock()
+    req = drms.ExportRequest({"status": 2}, client=mock_client)
+    assert req._status == 2
+    assert req.status == 2
+    mock_client._json.exp_status.assert_not_called()
