@@ -239,22 +239,16 @@ class ExportRequest:
     @property
     def status(self):
         """
-        (int) Export request status.
+        Export request status.
 
-        Available status codes:
-
-        - 0 = OK immediate data available or queue managed data is complete.
-        - 1 = Request received and action is pending, i.e. in processing.
-        - 2 = Queued for processing.
-        - 3 = Request too large for automatic requests.
-        - 4 = Request not formed correctly, bad series, etc.
-        - 5 = Request old, results requested after data timed out.
-        - -1 = The backend process was terminated (typically when the user cancels the export request).
-
-        Reference
+        Returns 0 if the export request succeeded. Other status codes indicate
+        that the request is either still pending, or an error occurred. See the
+        JSOC documentation for more information:
         ---------
         http://jsoc.stanford.edu/jsocwiki/AjaxJsocConnect#line-27-2
         """
+        if self._requestid is not None and self._status in self._status_codes_pending:
+            self._update_status()
         return self._status
 
     @property
